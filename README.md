@@ -1,4 +1,6 @@
-# sym
+# symbol-sdk-test
+
+https://piroz.github.io/symbol-sdk-test/
 
 ## Project setup
 ```
