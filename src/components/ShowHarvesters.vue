@@ -29,12 +29,13 @@ export default {
     setup() {
 
         const state = reactive({
-            host: "http://0-a.muraka.me:3000",
+            host: "http://ngl-dual-001.symbolblockchain.io:3000",
             isValid: false,
             unlockedAccontInfo: [],
             tableHeaders: [
                 {value: "address", text: "address", sortable: true},
-                {value: "importance", text: "importance", sortable: true}
+                {value: "importance.higher", text: "importance.higher", sortable: true},
+                {value: "importance.lower", text: "importance.lower", sortable: true}
             ],
             hasAccounts: false
         })
@@ -48,14 +49,20 @@ export default {
         const nodeService = new NodeService()
 
         const fetch = async () => {
-            state.unlockedAccontInfo = (await nodeService.getUnlockedAccountInfo(state.host)).map(a => {
-                return {
-                    address: a.address.address,
-                    explorerLink: `http://explorer.symbolblockchain.io/accounts/${a.address.address}`,
-                    importance: a.importance   
-                }
-            })
-            state.hasAccounts = state.unlockedAccontInfo.length > 0
+            try {
+                const result = await nodeService.getUnlockedAccountInfo(state.host)
+                state.unlockedAccontInfo = result.map(a => {
+                    return {
+                        address: a.address.address,
+                        explorerLink: `http://explorer.symbolblockchain.io/accounts/${a.address.address}`,
+                        importance: a.importance   
+                    }
+                })
+                state.hasAccounts = state.unlockedAccontInfo.length > 0
+            } catch(e) {
+                console.log(e)
+                alert("errror")
+            }
         };
 
         return {
